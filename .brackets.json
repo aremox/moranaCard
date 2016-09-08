@@ -1,0 +1,6 @@
+{
+    "jscodehints.detectedExclusions": [
+        "/Users/ivan/Documents/ProyectosIonic/moranaCard/platforms/android/cordova/lib/emulator.js",
+        "/Users/ivan/Documents/ProyectosIonic/moranaCard/platforms/ios/platform_www/cordova-js-src/exec.js"
+    ]
+}
