@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { ionicBootstrap, Platform, Nav } from 'ionic-angular';
-import { StatusBar } from 'ionic-native';
+import { StatusBar, SQLite } from 'ionic-native';
 
 import { Page1 } from './pages/page1/page1';
 import { Page2 } from './pages/page2/page2';
 import { LugarPage } from './pages/lugar/lugar';
+import { ListaLugaresPage } from './pages/lista-lugares/lista-lugares';
 
 @Component({
   templateUrl: 'build/app.html'
@@ -13,15 +14,31 @@ class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   //rootPage: any = Page1;
-   rootPage: any = LugarPage;
+   rootPage: any = ListaLugaresPage;
 
   pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform) {
     this.initializeApp();
+      
+      let db = new SQLite();
+            db.openDatabase({
+                name: "data.db",
+                location: "default"
+            }).then(() => {
+                //db.executeSql("DROP TABLE lugares",{}).then((data) => {console.log("TABLE DROP: ", data);}, (error) => {console.error("Unable to execute sql DROP", error);})
+                db.executeSql("CREATE TABLE IF NOT EXISTS lugares (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, latitud TEXT, longitud TEXT, telefono TEXT, categoria TEXT, imagen TEXT, descripcion TEXT)", {}).then((data) => {
+                    console.log("TABLE CREATED: ", data);
+                }, (error) => {
+                    console.error("Unable to execute sql", error);
+                })
+            }, (error) => {
+                console.error("Unable to open database", error);
+            });
 
     // used for an example of ngFor and navigation
     this.pages = [
+        { title: 'Lugares', component: ListaLugaresPage },
       { title: 'Page uno', component: Page1 },
       { title: 'Page dos', component: Page2 },
         { title: 'Añadir un lugar', component: LugarPage }
