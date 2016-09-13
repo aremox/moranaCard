@@ -17,35 +17,41 @@
 
 
 <ion-content>
+    <form (submit)="onSubmit()" [formGroup]="form">
         <ion-grid>
            <ion-row center>
 
                <ion-col width-50>
                    <img #imagenBASEhtml [src]="base64Image" *ngIf="base64Image" />
                    <!-- <img [src]="base64Image" /> -->
+                   <ion-input class="hidden" formControlName="fotoBase64Form" [(ngModel)]="fotoBase64"></ion-input>
                </ion-col>
                <ion-col width-50>
-                   <button (click)="presentActionSheet()">
+                   <button ion-button  (click)="presentActionSheet()" *ngIf="form.status == 'VALID' || !controlClic || fotoBase64">
                        <ion-icon name="camera" ></ion-icon>
                        Hacer foto
+                   </button>
+                    <button ion-button color="danger" (click)="presentActionSheet()" *ngIf="form.status == 'INVALID' && controlClic && !fotoBase64">
+                       <ion-icon name="camera" ></ion-icon>
+                       Hacer foto !!!
                    </button>
                </ion-col>
            </ion-row>
         </ion-grid>
         <ion-list>
             <ion-item>
-                <ion-input type="text" [(ngModel)]="nombre" placeholder="Nombre"></ion-input>
+                <ion-input type="text" formControlName="nombre" [(ngModel)]="nombre" placeholder="Nombre"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-input [(ngModel)]="direccion" type="text" placeholder="Dirección" (input)="getCoordenadas()"></ion-input>
+                <ion-input formControlName="direccion" [(ngModel)]="direccion" type="text" placeholder="Dirección" (input)="getCoordenadas()"></ion-input>
                  <ion-icon name="locate" item-right (click)="getGPS()"></ion-icon>
             </ion-item>
             <ion-item *ngFor="let foundDireccion of foundDirecciones" (click)="setDireccion(foundDireccion)">{{ foundDireccion.formatted_address }}</ion-item>
             <ion-item>
-                <ion-input type="text" [(ngModel)]="telefono" placeholder="Teléfono"></ion-input>
+                <ion-input formControlName="telefono" type="tel" [(ngModel)]="telefono" placeholder="Teléfono"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-select placeholder="categoria" [(ngModel)]="categoria" multiple="true" cancelText="Cancelar" okText="Seleccionar">
+                <ion-select formControlName="categoria" placeholder="categoria" [(ngModel)]="categoria" multiple="true" cancelText="Cancelar" okText="Seleccionar">
                     <ion-option value="que_visitar" >Que visitar</ion-option>
                     <ion-option value="donde_comer">Donde comer</ion-option>
                     <ion-option value="donde_dormir">Donde dormir</ion-option>
@@ -55,14 +61,10 @@
             </ion-item>
         </ion-list>
 
-        <button full (click)="onSubmit()">
+        <button full type="submit">
             <ion-icon name="send" ></ion-icon>
                        Registrar
         </button>
-        <ion-list>
-         <ion-item *ngFor="let lugar of lugares">
-             {{lugar.id}} {{lugar.nombre}}
-         </ion-item>
-     </ion-list>
+        </form>
 </ion-content>
 <canvas #imagenCANVAS></canvas>

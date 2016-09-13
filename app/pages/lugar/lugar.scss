@@ -1,24 +1,24 @@
 .lugar {
-
-}
-.action-sheets-basic-page {
-  .ion-md-share {
-    color: #ED4248;
-  }
-  .ion-md-arrow-dropright-circle {
-    color: #508AE4;
-  }
-  .ion-md-heart-outline {
-    color: #31D55F;
-  }
-  .action-sheet-cancel ion-icon,
-  .action-sheet-destructive ion-icon {
-    color: #757575;
-      background-color: red;
-  }
-    .action-sheet-cancel,
-  .action-sheet-destructive{
-    color: #757575;
-      background-color: red;
-  }
+    .action-sheets-basic-page {
+        .ion-md-share {
+            color: #ED4248;
+        }
+        .ion-md-arrow-dropright-circle {
+            color: #508AE4;
+        }
+        .ion-md-heart-outline {
+            color: #31D55F;
+        }
+        .action-sheet-cancel ion-icon,
+        .action-sheet-destructive ion-icon {
+            color: #757575;
+            background-color: red;
+        }
+        .action-sheet-cancel,
+        .action-sheet-destructive{
+            color: #757575;
+            background-color: red;
+        }
+    }
+    
 }

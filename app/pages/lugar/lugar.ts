@@ -1,7 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, Platform, ActionSheetController, LoadingController  } from 'ionic-angular';
+import { NavController, Platform, ActionSheetController, LoadingController, AlertController  } from 'ionic-angular';
 import {Camera, Geolocation, SQLite, Base64ToGallery} from 'ionic-native';
 import {GoogleAPIService} from '../../services/googleapi';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ListaLugaresPage } from '../lista-lugares/lista-lugares';
 
 /*
   Generated class for the LugarPage page.
@@ -18,6 +20,7 @@ const fs:string = cordova.file.dataDirectory;
   templateUrl: 'build/pages/lugar/lugar.html',
     providers: [GoogleAPIService],
 })
+
 export class LugarPage {
     @ViewChild('imagenCANVAS') canvasRef;
     @ViewChild('imagenBASEhtml') imageRef;
@@ -31,16 +34,26 @@ export class LugarPage {
     public lugares: Array<Object>;
     private fotoBase64: string;
     private categoria: string;
+     private controlClic: boolean = false;
+    form;
+
   
 
 
-  constructor(private navCtrl: NavController, public platform: Platform, private googleapi: GoogleAPIService, public actionSheetCtrl: ActionSheetController, public loadingCtrl: LoadingController) {
-        this.base64Image = "build/images/foto.jpg";
+  constructor(private navCtrl: NavController, public platform: Platform, private googleapi: GoogleAPIService, public actionSheetCtrl: ActionSheetController, public loadingCtrl: LoadingController, public alertCtrl: AlertController) {
+      this.form = new FormGroup({
+          fotoBase64Form: new FormControl("", Validators.required),
+          nombre: new FormControl("", Validators.required),
+          telefono: new FormControl("", Validators.required),
+          categoria: new FormControl("", Validators.required),
+          direccion: new FormControl("", Validators.required)
+      });
+      
         
         this.database = new SQLite();
         this.database.openDatabase({name: "data.db", location: "default"}).then(() => {
             console.log("OK: Conecta con la bbdd");
-            //this.refresh();
+            this.reset();
         }, (error) => {
             console.log("ERROR: ", error);
         });
@@ -165,9 +178,23 @@ getGPS() {
 }
 
 onSubmit() {
-    console.log("Pulsar boton de sumit");
-    console.log(this.nombre+" "+ this.coordenada[0]+" "+this.coordenada[1]+" "+this.telefono);
-    this.add();
+    
+    this.controlClic=true;
+    let alert = this.alertCtrl.create({
+      title: "Account Created",
+      message: "Se a registrado un nuevo lugar. ",
+      buttons: [{
+        text: 'Ok',
+      }]
+    });
+    if (this.form.status === 'VALID') {
+        console.log("Pulsar boton de sumit");
+        console.log(this.nombre+" "+ this.coordenada[0]+" "+this.coordenada[1]+" "+this.telefono);
+        this.add();
+        alert.present();
+    }else{
+        console.log("Pulsar boton de sumit CON ERROR :"+this.form.status);
+    }
   }
 
     public add() {
@@ -177,7 +204,8 @@ onSubmit() {
         
         this.database.executeSql("INSERT INTO lugares (nombre, latitud, longitud, telefono, categoria, imagen) VALUES ('"+this.nombre.toLowerCase()+"', '"+ this.coordenada[0]+"', '"+this.coordenada[1]+"', '"+this.telefono+"', '"+this.categoria+"', '"+this.fotoBase64+"')", []).then((data) => {
             console.log("INSERTED: " + JSON.stringify(data));
-            this.refresh();
+            //this.refresh();
+            //this.navCtrl.setRoot(ListaLugaresPage);
         }, (error) => {
             console.log("ERROR: " + JSON.stringify(error.err));
         });
@@ -207,6 +235,8 @@ private reset(){
     this.coordenada[0] = null;
     this.coordenada[1] = null;
     this.telefono = null;
+    this.categoria = null;
+    this.base64Image = "build/images/foto.jpg";
 }
      
      private getDataUri(url, callback):any {
