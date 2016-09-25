@@ -17,14 +17,14 @@
 
 
 <ion-content>
-    <form (submit)="onSubmit()" [formGroup]="form">
+
         <ion-grid>
            <ion-row center>
 
                <ion-col width-50>
                    <img #imagenBASEhtml [src]="base64Image" *ngIf="base64Image" />
                    <!-- <img [src]="base64Image" /> -->
-                   <ion-input class="hidden" formControlName="fotoBase64Form" [(ngModel)]="fotoBase64"></ion-input>
+
                </ion-col>
                <ion-col width-50>
                    <button ion-button  (click)="presentActionSheet()" *ngIf="form.status == 'VALID' || !controlClic || fotoBase64">
@@ -38,7 +38,11 @@
                </ion-col>
            </ion-row>
         </ion-grid>
+        <form (submit)="onSubmit()" [formGroup]="form">
         <ion-list>
+            <ion-item class="hidden">
+              <ion-input class="hidden" formControlName="fotoBase64Form" [(ngModel)]="fotoBase64"></ion-input>
+            </ion-item>
             <ion-item>
                 <ion-input type="text" formControlName="nombre" [(ngModel)]="nombre" placeholder="Nombre"></ion-input>
             </ion-item>

@@ -20,7 +20,7 @@ class MyApp {
 
   constructor(public platform: Platform) {
     this.initializeApp();
-      
+
       let db = new SQLite();
             db.openDatabase({
                 name: "data.db",
